@@ -1,0 +1,145 @@
+/* Steam animation for intro */
+@keyframes steam {
+  0% {
+    transform: translateY(0) scaleX(1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translateY(-12px) scaleX(1.3);
+    opacity: 0.3;
+  }
+  100% {
+    transform: translateY(-24px) scaleX(0.8);
+    opacity: 0;
+  }
+}
+
+.animate-steam {
+  animation: steam 1.8s ease-in-out infinite;
+}
+
+/* Category icon bounce on click */
+@keyframes icon-bounce {
+  0%   { transform: scale(1); }
+  30%  { transform: scale(0.82); }
+  60%  { transform: scale(1.15); }
+  80%  { transform: scale(0.95); }
+  100% { transform: scale(1); }
+}
+.icon-bounce {
+  animation: icon-bounce 0.4s ease forwards;
+}
+
+/* Ripple ring expand */
+@keyframes ripple-ring {
+  0%   { transform: scale(1);   opacity: 0.7; }
+  100% { transform: scale(1.9); opacity: 0; }
+}
+.ripple-ring {
+  animation: ripple-ring 0.45s ease-out forwards;
+}
+
+/* Product card staggered entrance */
+@keyframes card-enter {
+  0% {
+    opacity: 0;
+    transform: translateY(36px) scale(0.95);
+    filter: blur(5px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0px);
+  }
+}
+.card-enter {
+  animation: card-enter 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Menu page card entrance */
+@keyframes menu-card-in {
+  0% {
+    opacity: 0;
+    transform: translateY(24px) scale(0.97);
+    filter: blur(4px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+.menu-card-in {
+  animation: menu-card-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Menu page fade in */
+@keyframes page-fade-in {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.page-fade-in {
+  animation: page-fade-in 0.5s ease both;
+}
+
+/* Review card slide animations */
+@keyframes slide-in-left {
+  from { opacity: 0; transform: translateX(60px) scale(0.95); }
+  to   { opacity: 1; transform: translateX(0)    scale(1); }
+}
+@keyframes slide-in-right {
+  from { opacity: 0; transform: translateX(-60px) scale(0.95); }
+  to   { opacity: 1; transform: translateX(0)     scale(1); }
+}
+.slide-in-left  { animation: slide-in-left  0.35s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.slide-in-right { animation: slide-in-right 0.35s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+/* About page — section reveal on scroll */
+@keyframes reveal-up {
+  from { opacity: 0; transform: translateY(40px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.reveal-up {
+  animation: reveal-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Stat counter pop */
+@keyframes stat-pop {
+  0%   { opacity: 0; transform: scale(0.7); }
+  70%  { transform: scale(1.08); }
+  100% { opacity: 1; transform: scale(1); }
+}
+.stat-pop {
+  animation: stat-pop 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Cart page row entrance */
+@keyframes cart-row-in {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.97);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+.cart-row-in {
+  animation: cart-row-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Success overlay ring pulse */
+@keyframes success-ring {
+  0%   { transform: scale(1);   opacity: 0.6; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
+
+/* Owner figure floating animation */
+@keyframes owner-float {
+  0%   { transform: translateY(0px); }
+  50%  { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+.owner-float {
+  animation: owner-float 4s ease-in-out infinite;
+}

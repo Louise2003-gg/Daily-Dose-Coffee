@@ -1,0 +1,131 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <!-- Background gradient -->
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="#1a1008"/>
+      <stop offset="50%"  stop-color="#0e0a06"/>
+      <stop offset="100%" stop-color="#2a1a08"/>
+    </linearGradient>
+
+    <!-- Gold radial glow left -->
+    <radialGradient id="glowLeft" cx="25%" cy="50%" r="45%">
+      <stop offset="0%"   stop-color="#b8860b" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#b8860b" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Gold radial glow right -->
+    <radialGradient id="glowRight" cx="80%" cy="30%" r="40%">
+      <stop offset="0%"   stop-color="#c8a040" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#c8a040" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Glass panel gradient -->
+    <linearGradient id="glass" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="#ffffff" stop-opacity="0.07"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0.02"/>
+    </linearGradient>
+
+    <!-- Gold border gradient -->
+    <linearGradient id="goldBorder" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="#b8860b" stop-opacity="0.8"/>
+      <stop offset="50%"  stop-color="#f0c040" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#b8860b" stop-opacity="0.6"/>
+    </linearGradient>
+
+    <!-- Cup steam gradient -->
+    <linearGradient id="steam" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%"   stop-color="#b8860b" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#b8860b" stop-opacity="0"/>
+    </linearGradient>
+
+    <filter id="blur4">
+      <feGaussianBlur stdDeviation="4"/>
+    </filter>
+    <filter id="blur12">
+      <feGaussianBlur stdDeviation="12"/>
+    </filter>
+    <filter id="softShadow">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#000000" flood-opacity="0.5"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- Ambient glows -->
+  <rect width="1200" height="630" fill="url(#glowLeft)"/>
+  <rect width="1200" height="630" fill="url(#glowRight)"/>
+
+  <!-- Subtle grid texture lines -->
+  <g stroke="#ffffff" stroke-opacity="0.025" stroke-width="1">
+    <line x1="0" y1="105" x2="1200" y2="105"/>
+    <line x1="0" y1="210" x2="1200" y2="210"/>
+    <line x1="0" y1="315" x2="1200" y2="315"/>
+    <line x1="0" y1="420" x2="1200" y2="420"/>
+    <line x1="0" y1="525" x2="1200" y2="525"/>
+    <line x1="200" y1="0" x2="200" y2="630"/>
+    <line x1="400" y1="0" x2="400" y2="630"/>
+    <line x1="600" y1="0" x2="600" y2="630"/>
+    <line x1="800" y1="0" x2="800" y2="630"/>
+    <line x1="1000" y1="0" x2="1000" y2="630"/>
+  </g>
+
+  <!-- Glass card -->
+  <rect x="60" y="60" width="1080" height="510" rx="28" fill="url(#glass)" filter="url(#blur4)"/>
+  <rect x="60" y="60" width="1080" height="510" rx="28" fill="none" stroke="url(#goldBorder)" stroke-width="1.5"/>
+
+  <!-- Gold accent bar left -->
+  <rect x="60" y="60" width="5" height="510" rx="3" fill="#b8860b"/>
+
+  <!-- Decorative coffee cup icon (right side) -->
+  <!-- Cup body -->
+  <g transform="translate(870, 180)" opacity="0.18">
+    <rect x="0" y="60" width="140" height="110" rx="12" fill="#b8860b"/>
+    <rect x="10" y="70" width="120" height="90" rx="8" fill="#0e0a06"/>
+    <!-- Handle -->
+    <path d="M140 80 Q175 80 175 115 Q175 150 140 150" fill="none" stroke="#b8860b" stroke-width="12" stroke-linecap="round"/>
+    <!-- Saucer -->
+    <ellipse cx="70" cy="175" rx="85" ry="14" fill="#b8860b"/>
+    <!-- Steam lines -->
+    <path d="M40 50 Q50 25 40 0" fill="none" stroke="url(#steam)" stroke-width="4" stroke-linecap="round"/>
+    <path d="M70 45 Q80 18 70 -8" fill="none" stroke="url(#steam)" stroke-width="4" stroke-linecap="round"/>
+    <path d="M100 50 Q110 25 100 0" fill="none" stroke="url(#steam)" stroke-width="4" stroke-linecap="round"/>
+  </g>
+
+  <!-- Decorative circle rings -->
+  <circle cx="980" cy="315" r="180" fill="none" stroke="#b8860b" stroke-opacity="0.06" stroke-width="1"/>
+  <circle cx="980" cy="315" r="230" fill="none" stroke="#b8860b" stroke-opacity="0.04" stroke-width="1"/>
+  <circle cx="980" cy="315" r="280" fill="none" stroke="#b8860b" stroke-opacity="0.025" stroke-width="1"/>
+
+  <!-- Small decorative dots -->
+  <circle cx="120" cy="120" r="3" fill="#b8860b" fill-opacity="0.4"/>
+  <circle cx="145" cy="120" r="2" fill="#b8860b" fill-opacity="0.25"/>
+  <circle cx="165" cy="120" r="1.5" fill="#b8860b" fill-opacity="0.15"/>
+
+  <!-- Top label -->
+  <text x="130" y="168" font-family="Georgia, serif" font-size="13" fill="#b8860b" letter-spacing="5" font-weight="600" text-anchor="start">DAILY DOSE COFFEE</text>
+  <!-- Label underline -->
+  <line x1="130" y1="178" x2="380" y2="178" stroke="#b8860b" stroke-opacity="0.4" stroke-width="1"/>
+
+  <!-- Main headline -->
+  <text x="130" y="270" font-family="Georgia, 'Times New Roman', serif" font-size="72" fill="#ffffff" font-weight="700" text-anchor="start">Crafted with</text>
+  <text x="130" y="355" font-family="Georgia, 'Times New Roman', serif" font-size="72" fill="#b8860b" font-weight="700" text-anchor="start">Purpose &amp; Passion.</text>
+
+  <!-- Subtext -->
+  <text x="130" y="415" font-family="Arial, sans-serif" font-size="20" fill="#ffffff" fill-opacity="0.55" text-anchor="start">Premium handcrafted drinks · Gingoog City, Philippines</text>
+
+  <!-- Divider -->
+  <line x1="130" y1="445" x2="560" y2="445" stroke="#b8860b" stroke-opacity="0.3" stroke-width="1"/>
+
+  <!-- Bottom info row -->
+  <!-- Dot 1 -->
+  <circle cx="130" cy="490" r="4" fill="#b8860b"/>
+  <text x="145" y="496" font-family="Arial, sans-serif" font-size="16" fill="#ffffff" fill-opacity="0.65">Mon – Fri  ·  6:00 PM – 12:00 AM</text>
+
+  <!-- Dot 2 -->
+  <circle cx="130" cy="530" r="4" fill="#b8860b"/>
+  <text x="145" y="536" font-family="Arial, sans-serif" font-size="16" fill="#ffffff" fill-opacity="0.65">Brgy Anakan Purok Almaciga, Gingoog City</text>
+
+  <!-- Bottom-right tagline -->
+  <text x="1120" y="555" font-family="Georgia, serif" font-size="13" fill="#b8860b" fill-opacity="0.5" text-anchor="end" font-style="italic">Your daily cup of happiness ☕</text>
+</svg>
