@@ -35,7 +35,7 @@ export default function Intro({ onFinish }) {
         />
         <div
           className={`h-px bg-gradient-to-r from-transparent via-[#b8860b]/40 to-transparent
-            transition-all duration-1000 delay-500 translate-y-24
+            transition-all duration-1000 delay-500 translate-y-36
             ${phase === "start" ? "opacity-0" : "opacity-100"}`}
         />
       </div>
