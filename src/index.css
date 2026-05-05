@@ -2,22 +2,60 @@
 @tailwind components;
 @tailwind utilities;
 
-* {
+/* ── Hard reset — prevents Vite scaffold defaults from misaligning content ── */
+*, *::before, *::after {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 body {
-  font-family: 'Poppins', system-ui, sans-serif;
+  font-family: 'Poppins', system-ui, -apple-system, sans-serif;
+  background-color: #0e0a06;
+  color: #ffffff;
+  overflow-x: hidden;
+  /* Prevent layout shift from scrollbar appearing/disappearing */
+  scrollbar-gutter: stable;
 }
 
+/* Root fills viewport exactly — no centering, no max-width, no text-align */
 #root {
   width: 100%;
-  max-width: 100%;
-  margin: 0;
-  text-align: left;
-  border: none;
   min-height: 100svh;
   display: block;
+  text-align: left;
+  overflow-x: hidden;
+}
+
+/* Remove default button/input styles that can cause misalignment */
+button, input, textarea, select {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+/* Prevent images from overflowing their containers */
+img, svg, video {
+  display: block;
+  max-width: 100%;
+}
+
+/* Smooth scrollbar on webkit */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0e0a06;
+}
+::-webkit-scrollbar-thumb {
+  background: #b8860b40;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #b8860b80;
 }

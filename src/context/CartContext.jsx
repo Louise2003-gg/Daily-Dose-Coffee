@@ -74,6 +74,13 @@ export function CartProvider({ children }) {
 
   const clearCart = () => setCartItems([]);
 
+  // Cancel an order — sets status to "cancelled"
+  const cancelOrder = (orderId) => {
+    setOrderHistory((prev) =>
+      prev.map((o) => o.id === orderId ? { ...o, status: "cancelled" } : o)
+    );
+  };
+
   const totalItems = cartItems.reduce((sum, i) => sum + i.qty, 0);
 
   const totalPrice = cartItems.reduce((sum, i) => {
@@ -86,7 +93,7 @@ export function CartProvider({ children }) {
       value={{
         cartItems, addToCart, removeFromCart, updateQty, clearCart,
         totalItems, totalPrice,
-        orderHistory, placeOrder,
+        orderHistory, placeOrder, cancelOrder,
       }}
     >
       {children}

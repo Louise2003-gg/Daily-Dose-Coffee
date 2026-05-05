@@ -2,8 +2,6 @@ import { useState } from "react";
 import Navbar from "./Navbar";
 import { useCart } from "../context/CartContext";
 import bgImage from "../assets/background.png";
-
-/* ── Status steps ── */
 const STEPS = [
   {
     key: "confirmed",
@@ -49,10 +47,19 @@ const STEPS = [
 ];
 
 const STATUS_COLOR = {
-  confirmed: "text-yellow-400 bg-yellow-400/10 border-yellow-400/25",
-  preparing: "text-orange-400 bg-orange-400/10 border-orange-400/25",
-  ready:     "text-blue-400 bg-blue-400/10 border-blue-400/25",
-  delivered: "text-green-400 bg-green-400/10 border-green-400/25",
+  confirmed:  "text-yellow-400 bg-yellow-400/10 border-yellow-400/25",
+  preparing:  "text-orange-400 bg-orange-400/10 border-orange-400/25",
+  ready:      "text-blue-400 bg-blue-400/10 border-blue-400/25",
+  delivered:  "text-green-400 bg-green-400/10 border-green-400/25",
+  cancelled:  "text-red-400 bg-red-400/10 border-red-400/25",
+};
+
+const STATUS_LABEL = {
+  confirmed: "Confirmed",
+  preparing: "Preparing",
+  ready:     "Ready",
+  delivered: "Delivered",
+  cancelled: "Cancelled",
 };
 
 /* ── Status tracker ── */
@@ -100,7 +107,10 @@ function StatusTracker({ status }) {
 }
 
 /* ── Order detail modal / expanded view ── */
-function OrderDetail({ order, onClose, onNavigate }) {
+function OrderDetail({ order, onClose, onNavigate, onCancel }) {
+  const [confirmCancel, setConfirmCancel] = useState(false);
+  const canCancel = order.status === "confirmed" || order.status === "preparing";
+
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
@@ -193,13 +203,53 @@ function OrderDetail({ order, onClose, onNavigate }) {
             </div>
           </div>
 
-          {/* Action */}
-          <button
-            onClick={() => { onClose(); onNavigate?.("menu"); }}
-            className="w-full bg-[#b8860b] hover:bg-yellow-600 text-white font-bold text-sm py-3.5 rounded-2xl transition-colors"
-          >
-            Order Again
-          </button>
+          {/* Actions */}
+          <div className="flex flex-col gap-3">
+            <button
+              onClick={() => { onClose(); onNavigate?.("menu"); }}
+              className="w-full bg-[#b8860b] hover:bg-yellow-600 text-white font-bold text-sm py-3.5 rounded-2xl transition-colors"
+            >
+              Order Again
+            </button>
+
+            {/* Cancel order */}
+            {canCancel && !confirmCancel && (
+              <button
+                onClick={() => setConfirmCancel(true)}
+                className="w-full bg-red-500/10 hover:bg-red-500/20 border border-red-500/25 text-red-400 font-semibold text-sm py-3.5 rounded-2xl transition-colors"
+              >
+                Cancel Order
+              </button>
+            )}
+
+            {/* Confirm cancel */}
+            {confirmCancel && (
+              <div className="bg-red-500/10 border border-red-500/25 rounded-2xl p-4">
+                <p className="text-white text-sm font-semibold text-center mb-1">Cancel this order?</p>
+                <p className="text-white/45 text-xs text-center mb-4">This action cannot be undone.</p>
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => setConfirmCancel(false)}
+                    className="flex-1 bg-white/8 hover:bg-white/15 text-white/70 font-semibold text-sm py-2.5 rounded-xl transition-colors"
+                  >
+                    Keep Order
+                  </button>
+                  <button
+                    onClick={() => { onCancel(order.id); onClose(); }}
+                    className="flex-1 bg-red-500/80 hover:bg-red-500 text-white font-bold text-sm py-2.5 rounded-xl transition-colors"
+                  >
+                    Yes, Cancel
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {!canCancel && (
+              <p className="text-white/25 text-xs text-center">
+                Orders that are ready or delivered cannot be cancelled.
+              </p>
+            )}
+          </div>
         </div>
       </div>
     </div>
@@ -234,7 +284,7 @@ function OrderCard({ order, onClick, index }) {
               {moreCount > 0 && <span className="text-white/40 ml-1">+{moreCount} more</span>}
             </p>
             <span className={`flex-shrink-0 text-xs font-bold px-2.5 py-1 rounded-full border ${STATUS_COLOR[order.status]}`}>
-              {statusStep?.label}
+              {STATUS_LABEL[order.status] ?? order.status}
             </span>
           </div>
           <p className="text-white/40 text-xs">{order.date} · {order.time}</p>
@@ -255,7 +305,7 @@ function OrderCard({ order, onClick, index }) {
 
 /* ── Main page ── */
 export default function TrackOrderPage({ onNavigate }) {
-  const { orderHistory } = useCart();
+  const { orderHistory, cancelOrder } = useCart();
   const [selected, setSelected] = useState(null);
 
   return (
@@ -327,6 +377,7 @@ export default function TrackOrderPage({ onNavigate }) {
           order={selected}
           onClose={() => setSelected(null)}
           onNavigate={onNavigate}
+          onCancel={cancelOrder}
         />
       )}
     </div>
