@@ -2,8 +2,15 @@ import { createContext, useContext, useState } from "react";
 
 const CartContext = createContext(null);
 
+// Generate a readable order ID
+const generateOrderId = () => {
+  const num = Math.floor(1000 + Math.random() * 9000);
+  return `DD-${num}`;
+};
+
 export function CartProvider({ children }) {
-  const [cartItems, setCartItems] = useState([]);
+  const [cartItems,   setCartItems]   = useState([]);
+  const [orderHistory, setOrderHistory] = useState([]);
 
   const addToCart = (item) => {
     setCartItems((prev) => {
@@ -30,6 +37,41 @@ export function CartProvider({ children }) {
     );
   };
 
+  // Called when order is placed — saves a snapshot to history
+  const placeOrder = ({ address, paymentMethod }) => {
+    const subtotal    = cartItems.reduce((sum, i) => {
+      const num = parseInt(i.price.replace(/[^0-9]/g, ""), 10) || 0;
+      return sum + num * i.qty;
+    }, 0);
+    const deliveryFee = 50;
+    const now         = new Date();
+
+    const order = {
+      id:            generateOrderId(),
+      date:          now.toLocaleDateString("en-PH", { year: "numeric", month: "long", day: "numeric" }),
+      time:          now.toLocaleTimeString("en-PH", { hour: "2-digit", minute: "2-digit" }),
+      status:        "confirmed",
+      items:         cartItems.map((i) => ({
+        name:  i.name,
+        size:  i.size,
+        milk:  i.milk,
+        price: parseInt(i.price.replace(/[^0-9]/g, ""), 10) || 0,
+        qty:   i.qty,
+        img:   i.img,
+      })),
+      address:       `${address.street}, ${address.city}`,
+      customerName:  address.name,
+      phone:         address.phone,
+      paymentMethod,
+      subtotal,
+      deliveryFee,
+      total:         subtotal + deliveryFee,
+    };
+
+    setOrderHistory((prev) => [order, ...prev]);
+    return order.id;
+  };
+
   const clearCart = () => setCartItems([]);
 
   const totalItems = cartItems.reduce((sum, i) => sum + i.qty, 0);
@@ -41,7 +83,11 @@ export function CartProvider({ children }) {
 
   return (
     <CartContext.Provider
-      value={{ cartItems, addToCart, removeFromCart, updateQty, clearCart, totalItems, totalPrice }}
+      value={{
+        cartItems, addToCart, removeFromCart, updateQty, clearCart,
+        totalItems, totalPrice,
+        orderHistory, placeOrder,
+      }}
     >
       {children}
     </CartContext.Provider>

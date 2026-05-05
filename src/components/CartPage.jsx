@@ -194,7 +194,7 @@ function CartItemRow({ item, index }) {
 
 /* ── Main CartPage ───────────────────────────────────────── */
 export default function CartPage({ onNavigate, previousPage = "home" }) {
-  const { cartItems, clearCart, totalItems, totalPrice } = useCart();
+  const { cartItems, clearCart, totalItems, totalPrice, placeOrder } = useCart();
 
   const [paymentMethod, setPaymentMethod] = useState("cod");
   const [address, setAddress]             = useState({ name: "", phone: "", street: "", city: "" });
@@ -218,6 +218,7 @@ export default function CartPage({ onNavigate, previousPage = "home" }) {
     setErrors({});
     setBtnState("loading");
     setTimeout(() => {
+      placeOrder({ address, paymentMethod });
       setBtnState("done");
       setShowSuccess(true);
     }, 800);
