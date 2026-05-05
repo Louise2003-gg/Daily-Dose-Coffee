@@ -8,21 +8,23 @@ export default function Navbar({ onNavigate, currentPage = "home" }) {
   const { totalItems }          = useCart();
 
   const handleClick = (item) => {
-    const key = item === "About Us" ? "about" : item.toLowerCase();
+    const key = item === "About Us" ? "about" : item === "Track Order" ? "track" : item.toLowerCase();
     setMenuOpen(false);
     if (clicked === key) return;
     setClicked(key);
     setTimeout(() => setClicked(null), 450);
-    if (item === "Menu")     onNavigate?.("menu");
-    if (item === "Home")     onNavigate?.("home");
-    if (item === "About Us") onNavigate?.("about");
-    if (item === "Location") onNavigate?.("location");
+    if (item === "Menu")         onNavigate?.("menu");
+    if (item === "Home")         onNavigate?.("home");
+    if (item === "About Us")     onNavigate?.("about");
+    if (item === "Location")     onNavigate?.("location");
+    if (item === "Track Order")  onNavigate?.("track");
   };
 
   const getPageKey = (item) => {
-    if (item === "Home")     return "home";
-    if (item === "Menu")     return "menu";
-    if (item === "About Us") return "about";
+    if (item === "Home")         return "home";
+    if (item === "Menu")         return "menu";
+    if (item === "About Us")     return "about";
+    if (item === "Track Order")  return "track";
     return item.toLowerCase();
   };
 
@@ -33,7 +35,7 @@ export default function Navbar({ onNavigate, currentPage = "home" }) {
 
         {/* Desktop nav links */}
         <ul className="hidden md:flex gap-6 lg:gap-10 text-white text-sm lg:text-base font-medium tracking-wide">
-          {["Home", "Menu", "About Us", "Location"].map((item) => {
+          {["Home", "Menu", "About Us", "Location", "Track Order"].map((item) => {
             const pageKey   = getPageKey(item);
             const isActive  = currentPage === pageKey;
             const isClicked = clicked === pageKey;
@@ -110,7 +112,7 @@ export default function Navbar({ onNavigate, currentPage = "home" }) {
       {menuOpen && (
         <div className="md:hidden absolute top-full left-0 right-0 bg-black/90 backdrop-blur-md border-t border-white/10 px-5 py-4 flex flex-col gap-1"
           style={{ animation: "cart-row-in 0.25s ease both" }}>
-          {["Home", "Menu", "About Us", "Location"].map((item) => {
+          {["Home", "Menu", "About Us", "Location", "Track Order"].map((item) => {
             const pageKey  = getPageKey(item);
             const isActive = currentPage === pageKey;
             return (

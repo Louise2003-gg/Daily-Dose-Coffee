@@ -8,6 +8,7 @@ import LocationPage from "./components/LocationPage";
 import AuthPage from "./components/AuthPage";
 import AdminPanel from "./admin/AdminPanel";
 import CartPage from "./components/CartPage";
+import TrackOrderPage from "./components/TrackOrderPage";
 import { CartProvider } from "./context/CartContext";
 
 export default function App() {
@@ -54,7 +55,8 @@ export default function App() {
           {page === "location" && <LocationPage onNavigate={navigateTo} />}
           {page === "login"    && <AuthPage     onNavigate={navigateTo} initialMode="login" />}
           {page === "signup"   && <AuthPage     onNavigate={navigateTo} initialMode="signup" />}
-          {page === "cart"     && <CartPage     onNavigate={navigateTo} previousPage={prevPage} />}
+          {page === "cart"     && <CartPage          onNavigate={navigateTo} previousPage={prevPage} />}
+          {page === "track"    && <TrackOrderPage    onNavigate={navigateTo} />}
         </div>
       </div>
     </CartProvider>
