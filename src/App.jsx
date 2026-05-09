@@ -2,7 +2,7 @@ import { useState, useEffect, Suspense, lazy } from "react";
 import "./App.css";
 import Intro from "./components/Intro";
 import InstallPrompt from "./components/InstallPrompt";
-import MobileApp from "./components/MobileApp";
+import AppShell from "./app/AppShell";
 import { CartProvider } from "./context/CartContext";
 
 // Lazy-load all pages for better performance
@@ -98,8 +98,8 @@ export default function App() {
       <div className={`transition-opacity duration-700 ${showIntro ? "opacity-0 pointer-events-none" : "opacity-100"}`}>
 
         {showAppHome ? (
-          /* Installed PWA home screen */
-          <MobileApp onNavigate={navigateTo} />
+          /* Installed PWA — full app shell with bottom nav */
+          <AppShell />
         ) : (
           /* Website — same design on all browsers and all screen sizes */
           <div

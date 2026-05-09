@@ -143,3 +143,9 @@
 .owner-float {
   animation: owner-float 4s ease-in-out infinite;
 }
+
+/* App bottom sheet slide in */
+@keyframes slideInBottom {
+  from { transform: translateY(100%); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
