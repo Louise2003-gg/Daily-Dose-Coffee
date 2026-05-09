@@ -32,23 +32,22 @@ export default function App() {
   const [prevPage, setPrevPage]       = useState("home");
   const [pageVisible, setPageVisible] = useState(true);
 
-  // Reactive mobile detection — updates on resize
+  // Show mobile app layout ONLY when installed as PWA (standalone mode)
+  // Never show it in a regular browser — mobile or desktop
   const [useMobileApp, setUseMobileApp] = useState(
     () => window.matchMedia("(display-mode: standalone)").matches ||
-          window.navigator.standalone === true ||
-          window.innerWidth < 768
+          window.navigator.standalone === true
   );
 
   useEffect(() => {
+    const mq = window.matchMedia("(display-mode: standalone)");
     const update = () => {
       setUseMobileApp(
-        window.matchMedia("(display-mode: standalone)").matches ||
-        window.navigator.standalone === true ||
-        window.innerWidth < 768
+        mq.matches || window.navigator.standalone === true
       );
     };
-    window.addEventListener("resize", update);
-    return () => window.removeEventListener("resize", update);
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
   }, []);
 
   const navigateTo = (target) => {
@@ -107,7 +106,7 @@ export default function App() {
         )}
       </div>
 
-      {/* PWA install prompt — only on desktop or non-standalone */}
+      {/* PWA install prompt — shows in browser, not in installed app */}
       {!showIntro && !useMobileApp && <InstallPrompt />}
     </CartProvider>
   );
