@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Daily Dose — Offline</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #0e0a06;
+      color: #fff;
+      font-family: 'Georgia', serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 24px;
+    }
+    .icon {
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      background: rgba(184,134,11,0.15);
+      border: 1px solid rgba(184,134,11,0.3);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 24px;
+      font-size: 36px;
+    }
+    h1 { font-size: 2rem; color: #fff; margin-bottom: 8px; }
+    p  { color: rgba(255,255,255,0.5); font-size: 0.9rem; line-height: 1.6; max-width: 300px; margin: 0 auto 32px; font-family: sans-serif; }
+    a  {
+      background: #b8860b; color: #fff;
+      padding: 12px 32px; border-radius: 999px;
+      text-decoration: none; font-size: 0.9rem; font-weight: 600;
+      font-family: sans-serif;
+    }
+    a:hover { background: #c8a020; }
+  </style>
+</head>
+<body>
+  <div class="icon">☕</div>
+  <h1>You're Offline</h1>
+  <p>It looks like you've lost your connection. Check your internet and try again.</p>
+  <a href="/">Try Again</a>
+</body>
+</html>

@@ -1,15 +1,30 @@
-import { useState } from "react";
+import { useState, Suspense, lazy } from "react";
 import "./App.css";
 import Intro from "./components/Intro";
-import LandingPage from "./LandingPage";
-import MenuPage from "./components/MenuPage";
-import AboutPage from "./components/AboutPage";
-import LocationPage from "./components/LocationPage";
-import AuthPage from "./components/AuthPage";
-import AdminPanel from "./admin/AdminPanel";
-import CartPage from "./components/CartPage";
-import TrackOrderPage from "./components/TrackOrderPage";
+import InstallPrompt from "./components/InstallPrompt";
 import { CartProvider } from "./context/CartContext";
+
+// Lazy-load all pages for better performance
+const LandingPage     = lazy(() => import("./LandingPage"));
+const MenuPage        = lazy(() => import("./components/MenuPage"));
+const AboutPage       = lazy(() => import("./components/AboutPage"));
+const LocationPage    = lazy(() => import("./components/LocationPage"));
+const AuthPage        = lazy(() => import("./components/AuthPage"));
+const AdminPanel      = lazy(() => import("./admin/AdminPanel"));
+const CartPage        = lazy(() => import("./components/CartPage"));
+const TrackOrderPage  = lazy(() => import("./components/TrackOrderPage"));
+
+// Simple loading skeleton
+function PageSkeleton() {
+  return (
+    <div className="min-h-screen bg-[#0e0a06] flex items-center justify-center">
+      <div className="flex flex-col items-center gap-4">
+        <div className="w-12 h-12 rounded-full border-2 border-[#b8860b]/30 border-t-[#b8860b] animate-spin" />
+        <p className="text-white/30 text-xs tracking-widest uppercase">Loading</p>
+      </div>
+    </div>
+  );
+}
 
 export default function App() {
   const [showIntro, setShowIntro]     = useState(true);
@@ -19,21 +34,21 @@ export default function App() {
 
   const navigateTo = (target) => {
     if (target === page) return;
-    // Admin panel doesn't need the fade wrapper
     if (target === "admin") { setPage("admin"); return; }
     setPageVisible(false);
     setTimeout(() => {
       setPrevPage(page);
       setPage(target);
       setPageVisible(true);
-    }, 300);
+    }, 280);
   };
 
-  // Admin panel renders outside the normal flow
   if (page === "admin") {
     return (
       <CartProvider>
-        <AdminPanel onLogout={() => navigateTo("home")} />
+        <Suspense fallback={<PageSkeleton />}>
+          <AdminPanel onLogout={() => navigateTo("home")} />
+        </Suspense>
       </CartProvider>
     );
   }
@@ -41,24 +56,30 @@ export default function App() {
   return (
     <CartProvider>
       {showIntro && <Intro onFinish={() => setShowIntro(false)} />}
-      <div className={`transition-opacity duration-700 ${showIntro ? "opacity-0" : "opacity-100"}`}>
+
+      <div className={`transition-opacity duration-700 ${showIntro ? "opacity-0 pointer-events-none" : "opacity-100"}`}>
         <div
           style={{
             opacity:    pageVisible ? 1 : 0,
-            transform:  pageVisible ? "translateY(0)" : "translateY(10px)",
-            transition: "opacity 0.3s ease, transform 0.3s ease",
+            transform:  pageVisible ? "translateY(0) scale(1)" : "translateY(8px) scale(0.995)",
+            transition: "opacity 0.28s ease, transform 0.28s cubic-bezier(0.22,1,0.36,1)",
           }}
         >
-          {page === "home"     && <LandingPage  onNavigate={navigateTo} />}
-          {page === "menu"     && <MenuPage     onNavigate={navigateTo} />}
-          {page === "about"    && <AboutPage    onNavigate={navigateTo} />}
-          {page === "location" && <LocationPage onNavigate={navigateTo} />}
-          {page === "login"    && <AuthPage     onNavigate={navigateTo} initialMode="login" />}
-          {page === "signup"   && <AuthPage     onNavigate={navigateTo} initialMode="signup" />}
-          {page === "cart"     && <CartPage          onNavigate={navigateTo} previousPage={prevPage} />}
-          {page === "track"    && <TrackOrderPage    onNavigate={navigateTo} />}
+          <Suspense fallback={<PageSkeleton />}>
+            {page === "home"     && <LandingPage    onNavigate={navigateTo} />}
+            {page === "menu"     && <MenuPage        onNavigate={navigateTo} />}
+            {page === "about"    && <AboutPage       onNavigate={navigateTo} />}
+            {page === "location" && <LocationPage    onNavigate={navigateTo} />}
+            {page === "login"    && <AuthPage        onNavigate={navigateTo} initialMode="login" />}
+            {page === "signup"   && <AuthPage        onNavigate={navigateTo} initialMode="signup" />}
+            {page === "cart"     && <CartPage        onNavigate={navigateTo} previousPage={prevPage} />}
+            {page === "track"    && <TrackOrderPage  onNavigate={navigateTo} />}
+          </Suspense>
         </div>
       </div>
+
+      {/* PWA install prompt — shows after intro on mobile */}
+      {!showIntro && <InstallPrompt />}
     </CartProvider>
   );
 }
