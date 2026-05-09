@@ -15,6 +15,20 @@ const AdminPanel     = lazy(() => import("./admin/AdminPanel"));
 const CartPage       = lazy(() => import("./components/CartPage"));
 const TrackOrderPage = lazy(() => import("./components/TrackOrderPage"));
 
+/**
+ * Returns true ONLY when the app is running as an installed PWA.
+ * This is determined by display-mode: standalone (Android/desktop PWA)
+ * or navigator.standalone (iOS Safari PWA).
+ * It will NEVER return true in a regular browser tab — regardless of screen size.
+ */
+function checkIsInstalledPWA() {
+  return (
+    window.matchMedia("(display-mode: standalone)").matches ||
+    window.matchMedia("(display-mode: fullscreen)").matches ||
+    window.navigator.standalone === true
+  );
+}
+
 function PageSkeleton() {
   return (
     <div className="min-h-screen bg-[#0e0a06] flex items-center justify-center">
@@ -32,22 +46,25 @@ export default function App() {
   const [prevPage, setPrevPage]       = useState("home");
   const [pageVisible, setPageVisible] = useState(true);
 
-  // Show mobile app layout ONLY when installed as PWA (standalone mode)
-  // Never show it in a regular browser — mobile or desktop
-  const [useMobileApp, setUseMobileApp] = useState(
-    () => window.matchMedia("(display-mode: standalone)").matches ||
-          window.navigator.standalone === true
-  );
+  // isInstalledPWA is set once on mount and only updates if display-mode changes
+  // (which only happens when the app is actually installed/uninstalled)
+  // Screen size, window resize, and mobile browser do NOT affect this value
+  const [isInstalledPWA, setIsInstalledPWA] = useState(() => checkIsInstalledPWA());
 
   useEffect(() => {
-    const mq = window.matchMedia("(display-mode: standalone)");
-    const update = () => {
-      setUseMobileApp(
-        mq.matches || window.navigator.standalone === true
-      );
+    // Listen for display-mode changes only (not resize)
+    const standaloneMQ  = window.matchMedia("(display-mode: standalone)");
+    const fullscreenMQ  = window.matchMedia("(display-mode: fullscreen)");
+
+    const update = () => setIsInstalledPWA(checkIsInstalledPWA());
+
+    standaloneMQ.addEventListener("change", update);
+    fullscreenMQ.addEventListener("change", update);
+
+    return () => {
+      standaloneMQ.removeEventListener("change", update);
+      fullscreenMQ.removeEventListener("change", update);
     };
-    mq.addEventListener("change", update);
-    return () => mq.removeEventListener("change", update);
   }, []);
 
   const navigateTo = (target) => {
@@ -71,8 +88,8 @@ export default function App() {
     );
   }
 
-  // Pages that use the mobile app home screen
-  const showMobileHome = useMobileApp && page === "home";
+  // App home screen ONLY when installed AND on the home page
+  const showAppHome = isInstalledPWA && page === "home";
 
   return (
     <CartProvider>
@@ -80,11 +97,11 @@ export default function App() {
 
       <div className={`transition-opacity duration-700 ${showIntro ? "opacity-0 pointer-events-none" : "opacity-100"}`}>
 
-        {showMobileHome ? (
-          /* ── Mobile app home ── */
+        {showAppHome ? (
+          /* Installed PWA home screen */
           <MobileApp onNavigate={navigateTo} />
         ) : (
-          /* ── All other pages (desktop + mobile sub-pages) ── */
+          /* Website — same design on all browsers and all screen sizes */
           <div
             style={{
               opacity:    pageVisible ? 1 : 0,
@@ -106,8 +123,8 @@ export default function App() {
         )}
       </div>
 
-      {/* PWA install prompt — shows in browser, not in installed app */}
-      {!showIntro && !useMobileApp && <InstallPrompt />}
+      {/* Install prompt — only shown in browser, never in installed app */}
+      {!showIntro && !isInstalledPWA && <InstallPrompt />}
     </CartProvider>
   );
 }
