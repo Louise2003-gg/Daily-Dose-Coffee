@@ -1,4 +1,4 @@
-import { useState, Suspense, lazy } from "react";
+import { useState, useEffect, Suspense, lazy } from "react";
 import "./App.css";
 import Intro from "./components/Intro";
 import InstallPrompt from "./components/InstallPrompt";
@@ -14,13 +14,6 @@ const AuthPage       = lazy(() => import("./components/AuthPage"));
 const AdminPanel     = lazy(() => import("./admin/AdminPanel"));
 const CartPage       = lazy(() => import("./components/CartPage"));
 const TrackOrderPage = lazy(() => import("./components/TrackOrderPage"));
-
-// Detect if running as installed PWA (standalone) or mobile browser
-const isStandalone = () =>
-  window.matchMedia("(display-mode: standalone)").matches ||
-  window.navigator.standalone === true;
-
-const isMobile = () => window.innerWidth < 768;
 
 function PageSkeleton() {
   return (
@@ -39,8 +32,24 @@ export default function App() {
   const [prevPage, setPrevPage]       = useState("home");
   const [pageVisible, setPageVisible] = useState(true);
 
-  // Show mobile app layout when installed as PWA OR on mobile browser
-  const useMobileApp = isStandalone() || isMobile();
+  // Reactive mobile detection — updates on resize
+  const [useMobileApp, setUseMobileApp] = useState(
+    () => window.matchMedia("(display-mode: standalone)").matches ||
+          window.navigator.standalone === true ||
+          window.innerWidth < 768
+  );
+
+  useEffect(() => {
+    const update = () => {
+      setUseMobileApp(
+        window.matchMedia("(display-mode: standalone)").matches ||
+        window.navigator.standalone === true ||
+        window.innerWidth < 768
+      );
+    };
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, []);
 
   const navigateTo = (target) => {
     if (target === page) return;
@@ -63,17 +72,20 @@ export default function App() {
     );
   }
 
+  // Pages that use the mobile app home screen
+  const showMobileHome = useMobileApp && page === "home";
+
   return (
     <CartProvider>
       {showIntro && <Intro onFinish={() => setShowIntro(false)} />}
 
       <div className={`transition-opacity duration-700 ${showIntro ? "opacity-0 pointer-events-none" : "opacity-100"}`}>
 
-        {/* ── Mobile app layout (installed PWA or mobile browser) ── */}
-        {useMobileApp && page === "home" ? (
+        {showMobileHome ? (
+          /* ── Mobile app home ── */
           <MobileApp onNavigate={navigateTo} />
         ) : (
-          /* ── Desktop / other pages ── */
+          /* ── All other pages (desktop + mobile sub-pages) ── */
           <div
             style={{
               opacity:    pageVisible ? 1 : 0,
@@ -95,8 +107,8 @@ export default function App() {
         )}
       </div>
 
-      {/* PWA install prompt */}
-      {!showIntro && <InstallPrompt />}
+      {/* PWA install prompt — only on desktop or non-standalone */}
+      {!showIntro && !useMobileApp && <InstallPrompt />}
     </CartProvider>
   );
 }

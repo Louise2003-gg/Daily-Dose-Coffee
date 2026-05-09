@@ -1,10 +1,18 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import Logo from "../Logo";
 import { useCart } from "../context/CartContext";
 import {
   coffeeItems, nonCoffeeItems, sodaItems, dessertItems,
 } from "../data/menuData";
 import baristaBg from "../assets/Barista-at-night.png";
+
+/* ── Dynamic greeting ── */
+const getGreeting = () => {
+  const h = new Date().getHours();
+  if (h < 12) return "Good morning ☀️";
+  if (h < 17) return "Good afternoon ☕";
+  return "Good evening 🌙";
+};
 
 /* ── Hero banner images (carousel) ── */
 const BANNERS = [
@@ -149,7 +157,7 @@ export default function MobileApp({ onNavigate }) {
         style={{ background: "rgba(13,11,8,0.92)", backdropFilter: "blur(16px)" }}>
         <Logo width={44} height={48} />
         <div className="flex-1 mx-3">
-          <p className="text-white/40 text-xs">Good evening ☕</p>
+          <p className="text-white/40 text-xs">{getGreeting()}</p>
           <p className="text-white font-semibold text-sm leading-tight">What would you like today?</p>
         </div>
         <button
