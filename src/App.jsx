@@ -2,19 +2,26 @@ import { useState, Suspense, lazy } from "react";
 import "./App.css";
 import Intro from "./components/Intro";
 import InstallPrompt from "./components/InstallPrompt";
+import MobileApp from "./components/MobileApp";
 import { CartProvider } from "./context/CartContext";
 
 // Lazy-load all pages for better performance
-const LandingPage     = lazy(() => import("./LandingPage"));
-const MenuPage        = lazy(() => import("./components/MenuPage"));
-const AboutPage       = lazy(() => import("./components/AboutPage"));
-const LocationPage    = lazy(() => import("./components/LocationPage"));
-const AuthPage        = lazy(() => import("./components/AuthPage"));
-const AdminPanel      = lazy(() => import("./admin/AdminPanel"));
-const CartPage        = lazy(() => import("./components/CartPage"));
-const TrackOrderPage  = lazy(() => import("./components/TrackOrderPage"));
+const LandingPage    = lazy(() => import("./LandingPage"));
+const MenuPage       = lazy(() => import("./components/MenuPage"));
+const AboutPage      = lazy(() => import("./components/AboutPage"));
+const LocationPage   = lazy(() => import("./components/LocationPage"));
+const AuthPage       = lazy(() => import("./components/AuthPage"));
+const AdminPanel     = lazy(() => import("./admin/AdminPanel"));
+const CartPage       = lazy(() => import("./components/CartPage"));
+const TrackOrderPage = lazy(() => import("./components/TrackOrderPage"));
 
-// Simple loading skeleton
+// Detect if running as installed PWA (standalone) or mobile browser
+const isStandalone = () =>
+  window.matchMedia("(display-mode: standalone)").matches ||
+  window.navigator.standalone === true;
+
+const isMobile = () => window.innerWidth < 768;
+
 function PageSkeleton() {
   return (
     <div className="min-h-screen bg-[#0e0a06] flex items-center justify-center">
@@ -31,6 +38,9 @@ export default function App() {
   const [page, setPage]               = useState("home");
   const [prevPage, setPrevPage]       = useState("home");
   const [pageVisible, setPageVisible] = useState(true);
+
+  // Show mobile app layout when installed as PWA OR on mobile browser
+  const useMobileApp = isStandalone() || isMobile();
 
   const navigateTo = (target) => {
     if (target === page) return;
@@ -58,27 +68,34 @@ export default function App() {
       {showIntro && <Intro onFinish={() => setShowIntro(false)} />}
 
       <div className={`transition-opacity duration-700 ${showIntro ? "opacity-0 pointer-events-none" : "opacity-100"}`}>
-        <div
-          style={{
-            opacity:    pageVisible ? 1 : 0,
-            transform:  pageVisible ? "translateY(0) scale(1)" : "translateY(8px) scale(0.995)",
-            transition: "opacity 0.28s ease, transform 0.28s cubic-bezier(0.22,1,0.36,1)",
-          }}
-        >
-          <Suspense fallback={<PageSkeleton />}>
-            {page === "home"     && <LandingPage    onNavigate={navigateTo} />}
-            {page === "menu"     && <MenuPage        onNavigate={navigateTo} />}
-            {page === "about"    && <AboutPage       onNavigate={navigateTo} />}
-            {page === "location" && <LocationPage    onNavigate={navigateTo} />}
-            {page === "login"    && <AuthPage        onNavigate={navigateTo} initialMode="login" />}
-            {page === "signup"   && <AuthPage        onNavigate={navigateTo} initialMode="signup" />}
-            {page === "cart"     && <CartPage        onNavigate={navigateTo} previousPage={prevPage} />}
-            {page === "track"    && <TrackOrderPage  onNavigate={navigateTo} />}
-          </Suspense>
-        </div>
+
+        {/* ── Mobile app layout (installed PWA or mobile browser) ── */}
+        {useMobileApp && page === "home" ? (
+          <MobileApp onNavigate={navigateTo} />
+        ) : (
+          /* ── Desktop / other pages ── */
+          <div
+            style={{
+              opacity:    pageVisible ? 1 : 0,
+              transform:  pageVisible ? "translateY(0) scale(1)" : "translateY(8px) scale(0.995)",
+              transition: "opacity 0.28s ease, transform 0.28s cubic-bezier(0.22,1,0.36,1)",
+            }}
+          >
+            <Suspense fallback={<PageSkeleton />}>
+              {page === "home"     && <LandingPage    onNavigate={navigateTo} />}
+              {page === "menu"     && <MenuPage        onNavigate={navigateTo} />}
+              {page === "about"    && <AboutPage       onNavigate={navigateTo} />}
+              {page === "location" && <LocationPage    onNavigate={navigateTo} />}
+              {page === "login"    && <AuthPage        onNavigate={navigateTo} initialMode="login" />}
+              {page === "signup"   && <AuthPage        onNavigate={navigateTo} initialMode="signup" />}
+              {page === "cart"     && <CartPage        onNavigate={navigateTo} previousPage={prevPage} />}
+              {page === "track"    && <TrackOrderPage  onNavigate={navigateTo} />}
+            </Suspense>
+          </div>
+        )}
       </div>
 
-      {/* PWA install prompt — shows after intro on mobile */}
+      {/* PWA install prompt */}
       {!showIntro && <InstallPrompt />}
     </CartProvider>
   );
