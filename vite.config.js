@@ -42,7 +42,21 @@ export default defineConfig({
         ],
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,jpg,woff2}'],
+        // Raise the file size limit to 15MB to accommodate large images
+        maximumFileSizeToCacheInBytes: 15 * 1024 * 1024,
+        globPatterns: ['**/*.{js,css,html,ico,svg,woff2}', 'assets/*.{png,jpg}'],
+        // Exclude very large images from precache — they'll be cached at runtime instead
+        globIgnores: [
+          '**/TopBackground*.png',
+          '**/Barista-at-night*.png',
+          '**/dailydose-thumbnail.png',
+          '**/background*.png',
+          '**/nikki*.png',
+          '**/cookie*.png',
+          '**/*soda*.png',
+          '**/image*28*.png',
+          '**/coffee2*.png',
+        ],
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
